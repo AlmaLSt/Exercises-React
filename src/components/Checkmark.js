@@ -1,14 +1,17 @@
   import React from 'react';
 import PropTypes from 'prop-types';
 import '../css/Checkmark.css';
+import Context from './Context';
 
 // original: http://jsfiddle.net/awayF/490/
 function Checkmark(props) {
+  const { onClickCheckmark } = React.useContext(Context);
+
   return (
     <span
       className={`checkmark ${props.done ? 'dimmed': ''}`}
       onClick={
-        () => props.onClickCheckmark(props.index)
+        () => onClickCheckmark(props.index)
       }
     >
       <div className="checkmark_stem"/>
@@ -20,7 +23,6 @@ function Checkmark(props) {
 Checkmark.propTypes = {
   done: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
-  onClickCheckmark: PropTypes.func.isRequired,
 }
 
 export default Checkmark

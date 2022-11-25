@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './Header';
 import Form from './Form';
 import TodoList from './TodoList';
+import Context from './Context';
 
 // class App extends React.Component {
 //   constructor(props) {
@@ -80,13 +81,14 @@ function App() {
   return (
     <div className="wrapper">
       <div className="card frame">
-        <Header todos={todos} />
-        <TodoList 
-          todos={todos}
-          onClickCheckmark={changeDoneOnTodo}
-          onClickCross={deleteTodo}
-        />
-        <Form updateTodos={updateTodos}/>
+        <Context.Provider value={{
+          onClickCheckmark: changeDoneOnTodo,
+          onClickCross: deleteTodo,
+        }}>
+          <Header todos={todos} />
+          <TodoList todos={todos} />
+          <Form updateTodos={updateTodos}/>
+        </Context.Provider>
       </div>
     </div>
   );

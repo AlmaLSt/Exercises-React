@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../css/Todo.css';
 import Checkmark from './Checkmark';
+import Context from './Context';
 
 // class Todo extends React.Component {
 //   render () {
@@ -18,6 +19,8 @@ import Checkmark from './Checkmark';
 // }
 
   function Todo(props) {
+    const { onClickCross } = React.useContext(Context);
+
     return (
       <div className={`list-item ${props.done ? 'done' : ''}`}>
         {props.text}
@@ -25,11 +28,10 @@ import Checkmark from './Checkmark';
           <Checkmark
             done={props.done}
             index={props.index}
-            onClickCheckmark={props.onClickCheckmark}
           />
           <button
             className="delete is-pulled-right"
-            onClick={() => props.onClickCross(props.index)}
+            onClick={() => onClickCross(props.index)}
           />
         </div>
       </div>
@@ -40,8 +42,6 @@ Todo.propTypes = {
   done: PropTypes.bool.isRequired,
   text: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
-  onClickCheckmark: PropTypes.func.isRequired,
-  onClickCross: PropTypes.func.isRequired,
 }
 
 export default Todo;
