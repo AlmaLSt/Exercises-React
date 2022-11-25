@@ -27,7 +27,10 @@ import Checkmark from './Checkmark';
             index={props.index}
             onClickCheckmark={props.onClickCheckmark}
           />
-          <button className="delete is-pulled-right" />
+          <button
+            className="delete is-pulled-right"
+            onClick={() => props.onClickCross(props.index)}
+          />
         </div>
       </div>
     )
@@ -38,6 +41,7 @@ Todo.propTypes = {
   text: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   onClickCheckmark: PropTypes.func.isRequired,
+  onClickCross: PropTypes.func.isRequired,
 }
 
 export default Todo;

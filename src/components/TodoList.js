@@ -14,6 +14,7 @@ function TodoList(props) {
             done={element.done}
             index={i}
             onClickCheckmark={props.onClickCheckmark}
+            onClickCross={props.onClickCross}
           />)
       }
     </div>
@@ -23,6 +24,7 @@ function TodoList(props) {
 TodoList.propTypes = {
   todos: PropTypes.array.isRequired,
   onClickCheckmark: PropTypes.func.isRequired,
+  onClickCross: PropTypes.func.isRequired,
 }
 
 export default TodoList;
