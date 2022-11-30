@@ -16,6 +16,28 @@ import Context from './Context';
 //     // this.updateTodos = this.updateTodos.bind(this);
 //   }
 
+//   getData = () => {
+//     fetch('https://jsonplaceholder.typicode.com/todos/1')
+//     .then(response => {
+//         return response.json()
+//     }).then(response => {
+//       // const text = response.title;
+//       // const done = response.completed;
+//       const {
+//         title: text,
+//         completed: done,
+//       } = response;
+
+//       this.setState({todos: [{text, done}, ...this.state.todos]});
+//     });
+//   }
+
+//   componentDidMount() {
+//     this.getData();
+//   }
+
+//   componentWillUnmount() {}
+
 //   changeDoneOnTodo = (n) => {
 //     const newTodos = [...this.state.todos];
   
@@ -50,6 +72,26 @@ import Context from './Context';
 
 function App() {
   const [todos, setTodos] = React.useState([]);
+
+  React.useEffect(() => {
+    getData();
+    // eslint-disable-next-line
+  }, []);
+
+  const getData = () => {
+        fetch('https://jsonplaceholder.typicode.com/todos/1')
+        .then(response => response.json())
+        .then(response => {
+          // const text = response.title;
+          // const done = response.completed;
+          const {
+            title: text,
+            completed: done,
+          } = response;
+    
+          setTodos([{text, done}, ...todos]);
+        });
+      }
 
   const changeDoneOnTodo = index => {
     const newTodos = [...todos];
