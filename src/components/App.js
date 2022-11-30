@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+
 import Header from './Header';
 import Form from './Form';
 import TodoList from './TodoList';
@@ -74,6 +76,7 @@ const URL = 'http://localhost:4000/todos';
 
 function App() {
   const [todos, setTodos] = React.useState([]);
+  const [error, setError] = React.useState(null);
 
   React.useEffect(() => {
     getData();
@@ -88,26 +91,43 @@ function App() {
 
   // GET (Read) ya está yendo a backend
   const getData = () => {
-        fetch(URL)
-        .then(response => response.json())
-        .then(response => setTodos([...response, ...todos]));
+        // fetch(URL)
+        // .then(response => response.json())
+        // .then(response => setTodos([...response, ...todos]));
+        axios.get(URL)
+        .then(response => setTodos([...response.data]))
       }
 
   // PATCH (Update) ya está yendo a backend
   const updateTodo = (id, body) => {
-    fetch(`${URL}/${id}`, {
-    method: 'PATCH',
-    headers: {
-        'Content-type': 'application/json',
-    },
-    body: JSON.stringify(body),
-    })
-    .then(response => response.json())
+    // fetch(`${URL}/${id}`, {
+    // method: 'PATCH',
+    // headers: {
+    //     'Content-type': 'application/json',
+    // },
+    // body: JSON.stringify(body),
+    // })
+    // .then(response => response.json())
+    // .then(response => {
+    //   // Lógica de UI (Interfaz de usuario)
+    //   const newTodos = [...todos];
+
+    //   const index = newTodos.findIndex(element => element.id === response.id);
+  
+    //   if (index === -1) {
+    //       return;
+    //   }
+  
+    //   newTodos[index].done = !newTodos[index].done;
+    //   setTodos(newTodos);
+    // })
+
+    axios.patch(`${URL}/${id}`, body)
     .then(response => {
       // Lógica de UI (Interfaz de usuario)
       const newTodos = [...todos];
 
-      const index = newTodos.findIndex(element => element.id === response.id);
+      const index = newTodos.findIndex(element => element.id === response.data.id);
   
       if (index === -1) {
           return;
@@ -115,6 +135,14 @@ function App() {
   
       newTodos[index].done = !newTodos[index].done;
       setTodos(newTodos);
+    }).catch(error => {
+      if (error.code === "ERR_NETWORK") {
+        setError('Es nuestro error, perdón, pero los gatos los rompieron los cables. :-(, estamos trabajando para mejorar. Por favor intente más tarde.')
+      }
+
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
     })
   };
 
@@ -149,7 +177,8 @@ function App() {
         }}>
           <Header todos={todos} />
           <TodoList todos={todos} />
-          <Form updateTodos={updateTodos}/>
+          <Form updateTodos={updateTodos} />
+          {error}
         </Context.Provider>
       </div>
     </div>
