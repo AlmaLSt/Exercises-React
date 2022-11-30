@@ -70,6 +70,8 @@ import Context from './Context';
 //   }
 // }
 
+const URL = 'http://localhost:4000/todos';
+
 function App() {
   const [todos, setTodos] = React.useState([]);
 
@@ -78,32 +80,50 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
+  // CRUD
+  // Create
+  // Read
+  // Update
+  // Delete
+
+  // GET (Read) ya está yendo a backend
   const getData = () => {
-        fetch('https://jsonplaceholder.typicode.com/todos/1')
+        fetch(URL)
         .then(response => response.json())
-        .then(response => {
-          // const text = response.title;
-          // const done = response.completed;
-          const {
-            title: text,
-            completed: done,
-          } = response;
-    
-          setTodos([{text, done}, ...todos]);
-        });
+        .then(response => setTodos([...response, ...todos]));
       }
 
-  const changeDoneOnTodo = index => {
-    const newTodos = [...todos];
+  // PATCH (Update) ya está yendo a backend
+  const updateTodo = (id, body) => {
+    fetch(`${URL}/${id}`, {
+    method: 'PATCH',
+    headers: {
+        'Content-type': 'application/json',
+    },
+    body: JSON.stringify(body),
+    })
+    .then(response => response.json())
+    .then(response => {
+      // Lógica de UI (Interfaz de usuario)
+      const newTodos = [...todos];
 
-    newTodos[index].done = !newTodos[index].done;
-    setTodos(newTodos);
-  }
+      const index = newTodos.findIndex(element => element.id === response.id);
+  
+      if (index === -1) {
+          return;
+      }
+  
+      newTodos[index].done = !newTodos[index].done;
+      setTodos(newTodos);
+    })
+  };
 
+  // POST (Create) todavía no implementado en backend
   const updateTodos = todo => {
     setTodos([todo, ...todos]);
   }
 
+  // DELETE (Delete) todavía no impolementado en backend
   const deleteTodo = index => {
     // copiar los elementos del array todos
     // desde el inicio hasta index (sin el elemento index)
@@ -124,7 +144,7 @@ function App() {
     <div className="wrapper">
       <div className="card frame">
         <Context.Provider value={{
-          onClickCheckmark: changeDoneOnTodo,
+          onClickCheckmark: updateTodo,
           onClickCross: deleteTodo,
         }}>
           <Header todos={todos} />

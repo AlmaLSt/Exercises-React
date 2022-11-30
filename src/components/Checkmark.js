@@ -11,7 +11,7 @@ function Checkmark(props) {
     <span
       className={`checkmark ${props.done ? 'dimmed': ''}`}
       onClick={
-        () => onClickCheckmark(props.index)
+        () => onClickCheckmark(props.index, {done: !props.done})
       }
     >
       <div className="checkmark_stem"/>
