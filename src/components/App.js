@@ -148,11 +148,13 @@ function App() {
 
   // POST (Create) todavía no implementado en backend
   const updateTodos = todo => {
-    setTodos([todo, ...todos]);
+    axios.post(URL, todo).then(response => {
+      setTodos([...todos, response.data]);
+    })
   }
 
   // DELETE (Delete) todavía no impolementado en backend
-  const deleteTodo = index => {
+  const deleteTodo = id => {
     // copiar los elementos del array todos
     // desde el inicio hasta index (sin el elemento index)
     // de index + 1, hasta el final.
@@ -160,12 +162,15 @@ function App() {
     // const end = todos.slice(index + 1);
     // setTodos([...head, ...end]);
 
-    setTodos(
-      [
-      ...todos.slice(0, index),
-      ...todos.slice(index + 1)
-      ]
+    axios.delete(`${URL}/${id}`).then(() => {
+      const index = todos.findIndex(element => element.id === id);
+      setTodos(
+        [
+        ...todos.slice(0, index),
+        ...todos.slice(index + 1)
+        ]
     );
+    })
   }
 
   return (
