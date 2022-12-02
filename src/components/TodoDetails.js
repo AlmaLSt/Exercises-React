@@ -1,35 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 
 function TodoDetails(props) {
-  const [todo, setTodo] = React.useState({ title: "", details: [] });
-  const id = props.match.params.id;
+  const { id } = useParams();
 
-  React.useEffect(function() {
-    const getData = async () => {
-      try {
-        const response = await fetch(`${props.url}/${id}`);
-        const t = await response.json();
+  const index = props.todos.findIndex(element => element.id === parseInt(id, 10));
 
-        setTodo(t);
-      } catch(e) {
-        console.error(e);
-      }
-    };
-
-    getData();
-  }, [id, props.url]);
+  const todo = props.todos[index];
 
   return (
     <>
     <div className="card-header">
       <h1 className="card-header-title header">
-        {todo.title}
+        {todo && todo.text}
       </h1 >
     </div>
     <div className="list-wrapper">
       {
-        todo.details.map((detail, i) => 
+        todo && todo.details && todo.details.map((detail, i) => 
           <div key={i} className="list-item">
             { detail }
           </div>
@@ -41,7 +30,7 @@ function TodoDetails(props) {
 }
 
 TodoDetails.propTypes = {
-  url: PropTypes.string.isRequired
+  todos: PropTypes.array
 };
 
 export default TodoDetails;

@@ -1,23 +1,25 @@
 import React from 'react';
 import axios from 'axios';
-import { Routes, Route, useParams } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
+import { URL } from '../constants';
 import Header from './Header';
 import Form from './Form';
 import TodoList from './TodoList';
 import Context from './Context';
-import { URL } from '../constants';
+import TodoDetails from './TodoDetails';
+
 
 function App() {
   const [todos, setTodos] = React.useState([]);
   const [error, setError] = React.useState(null);
 
   React.useEffect(() => {
-    getData();
+    getTodos();
     // eslint-disable-next-line
   }, []);
 
-  const getData = () => {
+  const getTodos = () => {
     axios.get(URL).then(response => setTodos([...response.data]))
   }
 
@@ -44,7 +46,7 @@ function App() {
     })
   };
 
-  const updateTodos = todo => {
+  const createTodo = todo => {
     axios.post(URL, todo).then(response => {
       setTodos([...todos, response.data]);
     })
@@ -66,15 +68,15 @@ function App() {
     <div className="wrapper">
       <div className="card frame">
         <Context.Provider value={{
-          onClickCheckmark: updateTodo,
-          onClickCross: deleteTodo,
+          handleToggleDone: updateTodo,
+          handleDeleteTodo: deleteTodo,
         }}>
           <Routes>
             <Route path="/" element={
               <>
                 <Header todos={todos} />
                 <TodoList todos={todos} />
-                <Form updateTodos={updateTodos} />
+                <Form createTodo={createTodo} />
                 {error}
               </>
             } />
@@ -84,25 +86,6 @@ function App() {
       </div>
     </div>
   );
-}
-
-const TodoDetails = ({todos}) => {
-  let { id } = useParams();
-
-  id = parseInt(id, 10);
-
-  const index = todos.findIndex(element => element.id === id);
-
-  return (
-    <div>
-      Detalles de la tarea {todos[index] && todos[index].text}
-      <ol>
-        {
-          todos[index] && todos[index].details && todos[index].details.map((e, i) => <li key={i}>{e}</li>)
-        }
-      </ol>
-    </div>
-  )
 }
 
 export default App;

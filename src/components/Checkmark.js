@@ -5,13 +5,13 @@ import Context from './Context';
 
 // original: http://jsfiddle.net/awayF/490/
 function Checkmark(props) {
-  const { onClickCheckmark } = React.useContext(Context);
+  const { handleToggleDone } = React.useContext(Context);
 
   return (
     <span
       className={`checkmark ${props.done ? 'dimmed': ''}`}
       onClick={
-        () => onClickCheckmark(props.index, {done: !props.done})
+        () => handleToggleDone(props.index, {done: !props.done})
       }
     >
       <div className="checkmark_stem"/>

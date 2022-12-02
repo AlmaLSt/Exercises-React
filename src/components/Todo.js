@@ -7,7 +7,7 @@ import Checkmark from './Checkmark';
 import Context from './Context';
 
   function Todo(props) {
-    const { onClickCross } = React.useContext(Context);
+    const { handleDeleteTodo } = React.useContext(Context);
 
     return (
       <div className={`list-item ${props.done ? 'done' : ''}`}>
@@ -21,7 +21,7 @@ import Context from './Context';
           />
           <button
             className="delete is-pulled-right"
-            onClick={() => onClickCross(props.index)}
+            onClick={() => handleDeleteTodo(props.index)}
           />
         </div>
       </div>
