@@ -8,6 +8,7 @@ import Form from './Form';
 import TodoList from './TodoList';
 import Context from './Context';
 import TodoDetails from './TodoDetails';
+import NotFound from './NotFound';
 
 
 function App() {
@@ -81,11 +82,13 @@ function App() {
               </>
             } />
             <Route path="/details/:id" element={<TodoDetails todos={todos} />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Context.Provider>
       </div>
     </div>
   );
 }
+
 
 export default App;
