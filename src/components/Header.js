@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import '../css/header.css';
 
 function Header(props) {
@@ -10,5 +12,13 @@ function Header(props) {
     </div>
   )
 };
+
+Header.defaultProps = {
+  todos: [],
+}
+
+Header.proptTypes = {
+  todos: PropTypes.array.isRequired,
+}
 
 export default Header;

@@ -5,7 +5,7 @@ import '../css/TodoList.css';
 
 function TodoList(props) {
   return (
-    <div className="list-wrapper">
+    <div data-testid="todo-list" className="list-wrapper">
       {
         props.todos.map((element) =>
           <Todo
@@ -22,5 +22,9 @@ function TodoList(props) {
 TodoList.propTypes = {
   todos: PropTypes.array.isRequired,
 }
+
+TodoList.defaultProps = {
+  todos: [],
+};
 
 export default TodoList;

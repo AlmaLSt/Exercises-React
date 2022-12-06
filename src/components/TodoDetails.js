@@ -11,26 +11,30 @@ function TodoDetails(props) {
 
   return (
     <>
-    <div className="card-header">
-      <h1 className="card-header-title header">
-        {todo && todo.text}
-      </h1 >
-    </div>
-    <div className="list-wrapper">
-      {
-        todo && todo.details && todo.details.map((detail, i) => 
-          <div key={i} className="list-item">
-            { detail }
-          </div>
-        )
-      }
-    </div>
+      <div data-testid="todo-details" className="card-header">
+        <h1 className="card-header-title header">
+          {todo && todo.text}
+        </h1 >
+      </div>
+      <div className="list-wrapper">
+        {
+          todo && todo.details && todo.details.map((detail, i) => 
+            <div data-testid="todo-details-item" key={i} className="list-item">
+              { detail }
+            </div>
+          )
+        }
+      </div>
     </>
   )
 }
 
 TodoDetails.propTypes = {
   todos: PropTypes.array
+};
+
+TodoDetails.defaultProps = {
+  todos: [],
 };
 
 export default TodoDetails;
