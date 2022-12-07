@@ -1,14 +1,14 @@
 import React from 'react';
-import axios from 'axios';
 import { Routes, Route } from 'react-router-dom';
 
-import { URL } from '../constants';
 import Header from './Header';
 import Form from './Form';
 import TodoList from './TodoList';
 import Context from './Context';
 import TodoDetails from './TodoDetails';
 import NotFound from './NotFound';
+
+import { get, update, create, del } from '../todos';
 
 
 function App() {
@@ -20,49 +20,55 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
-  const getTodos = () => {
-    axios.get(URL).then(response => setTodos([...response.data]))
-  }
+  const getTodos = async () => {
+    const response = await get();
+    setTodos([...response]);
+  };
 
-  const updateTodo = (id, body) => {
-    axios.patch(`${URL}/${id}`, body)
-    .then(response => {
-      const newTodos = [...todos];
-      const index = newTodos.findIndex(element => element.id === response.data.id);
-  
-      if (index === -1) {
-          return;
-      }
-  
-      newTodos[index].done = !newTodos[index].done;
-      setTodos(newTodos);
-    }).catch(error => {
-      if (error.code === "ERR_NETWORK") {
-        setError('Es nuestro error, perdón, pero los gatos los rompieron los cables. :-(, estamos trabajando para mejorar. Por favor intente más tarde.')
-      }
+  const updateTodo = async (id, body) => {
+    const response = await update(id, body);
+
+    if (!response) {
+      setError('Es nuestro error, perdón, pero los gatos los rompieron los cables. :-(, estamos trabajando para mejorar. Por favor intente más tarde.')
 
       setTimeout(() => {
         setError(null);
       }, 2000);
-    })
+
+      return;
+    }
+
+    const newTodos = [...todos];
+    const index = newTodos.findIndex(element => element.id === response.id);
+
+    if (index === -1) {
+        return;
+    }
+
+    newTodos[index].done = !newTodos[index].done;
+    setTodos(newTodos);
   };
 
-  const createTodo = todo => {
-    axios.post(URL, todo).then(response => {
-      setTodos([...todos, response.data]);
-    })
+  const createTodo = async todo => {
+    const response = await create(todo);
+
+    if (!response) return;
+
+    setTodos([...todos, response]);
   }
 
-  const deleteTodo = id => {
-    axios.delete(`${URL}/${id}`).then(() => {
-      const index = todos.findIndex(element => element.id === id);
+  const deleteTodo = async id => {
+    const ok = await del(id);
+
+    if (!ok) return;
+
+    const index = todos.findIndex(element => element.id === id);
       setTodos(
         [
         ...todos.slice(0, index),
         ...todos.slice(index + 1)
         ]
     );
-    })
   }
 
   return (

@@ -1,2 +1,4 @@
 /node_modules
 fake-backend/node_modules
+coverage
+fake-backend/db.json

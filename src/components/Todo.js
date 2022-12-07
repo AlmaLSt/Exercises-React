@@ -10,7 +10,10 @@ import Context from './Context';
     const { handleDeleteTodo } = React.useContext(Context);
 
     return (
-      <div className={`list-item ${props.done ? 'done' : ''}`}>
+      <div 
+        data-testid='todo'
+        className={`list-item ${props.done ? 'done' : ''}`}
+        >
         <Link to={`/details/${props.index}`}>
           {props.text}
         </Link>
@@ -20,6 +23,7 @@ import Context from './Context';
             index={props.index}
           />
           <button
+            data-testid="delete-button"
             className="delete is-pulled-right"
             onClick={() => handleDeleteTodo(props.index)}
           />
@@ -32,6 +36,10 @@ Todo.propTypes = {
   done: PropTypes.bool.isRequired,
   text: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
-}
+};
+
+Todo.defaultProps = {
+  done: false,
+};
 
 export default Todo;

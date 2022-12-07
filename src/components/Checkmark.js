@@ -1,5 +1,6 @@
-  import React from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+
 import '../css/Checkmark.css';
 import Context from './Context';
 
@@ -9,6 +10,7 @@ function Checkmark(props) {
 
   return (
     <span
+      data-testid="checkmark"
       className={`checkmark ${props.done ? 'dimmed': ''}`}
       onClick={
         () => handleToggleDone(props.index, {done: !props.done})
@@ -23,6 +25,10 @@ function Checkmark(props) {
 Checkmark.propTypes = {
   done: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
+}
+
+Checkmark.defaultProps = {
+  done: false,
 }
 
 export default Checkmark
