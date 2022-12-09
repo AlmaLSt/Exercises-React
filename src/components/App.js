@@ -1,139 +1,101 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
+
 import Header from './Header';
 import Form from './Form';
 import TodoList from './TodoList';
 import Context from './Context';
+import TodoDetails from './TodoDetails';
+import NotFound from './NotFound';
 
-// class App extends React.Component {
-//   constructor(props) {
-//     super(props);
+import { get, update, create, del } from '../todos';
 
-//     this.state = {
-//       todos: []
-//     }
-
-//     // this.changeDoneOnTodo = this.changeDoneOnTodo.bind(this);
-//     // this.updateTodos = this.updateTodos.bind(this);
-//   }
-
-//   getData = () => {
-//     fetch('https://jsonplaceholder.typicode.com/todos/1')
-//     .then(response => {
-//         return response.json()
-//     }).then(response => {
-//       // const text = response.title;
-//       // const done = response.completed;
-//       const {
-//         title: text,
-//         completed: done,
-//       } = response;
-
-//       this.setState({todos: [{text, done}, ...this.state.todos]});
-//     });
-//   }
-
-//   componentDidMount() {
-//     this.getData();
-//   }
-
-//   componentWillUnmount() {}
-
-//   changeDoneOnTodo = (n) => {
-//     const newTodos = [...this.state.todos];
-  
-//     newTodos[n].done = !newTodos[n].done;
-//     this.setState({ todos: newTodos });
-//   }
-
-//   updateTodos = (todo) => {
-//     this.setState({todos: [todo, ...this.state.todos]});
-//   }
-
-//   render() {
-//     const {
-//       changeDoneOnTodo,
-//       updateTodos,
-//       state: {
-//         todos,
-//       }
-//     } = this;
-
-//     return (
-//       <div className="wrapper">
-//         <div className="card frame">
-//           <Header todos={todos} />
-//           <TodoList todos={todos} onClickCheckmark={changeDoneOnTodo}/>
-//           <Form updateTodos={updateTodos}/>
-//         </div>
-//       </div>
-//     );
-//   }
-// }
 
 function App() {
   const [todos, setTodos] = React.useState([]);
+  const [error, setError] = React.useState(null);
 
   React.useEffect(() => {
-    getData();
+    getTodos();
     // eslint-disable-next-line
   }, []);
 
-  const getData = () => {
-        fetch('https://jsonplaceholder.typicode.com/todos/1')
-        .then(response => response.json())
-        .then(response => {
-          // const text = response.title;
-          // const done = response.completed;
-          const {
-            title: text,
-            completed: done,
-          } = response;
-    
-          setTodos([{text, done}, ...todos]);
-        });
-      }
+  const getTodos = async () => {
+    const response = await get();
+    setTodos([...response]);
+  };
 
-  const changeDoneOnTodo = index => {
+  const updateTodo = async (id, body) => {
+    const response = await update(id, body);
+
+    if (!response) {
+      setError('Es nuestro error, perdón, pero los gatos los rompieron los cables. :-(, estamos trabajando para mejorar. Por favor intente más tarde.')
+
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
+
+      return;
+    }
+
     const newTodos = [...todos];
+    const index = newTodos.findIndex(element => element.id === response.id);
+
+    if (index === -1) {
+        return;
+    }
 
     newTodos[index].done = !newTodos[index].done;
     setTodos(newTodos);
+  };
+
+  const createTodo = async todo => {
+    const response = await create(todo);
+
+    if (!response) return;
+
+    setTodos([...todos, response]);
   }
 
-  const updateTodos = todo => {
-    setTodos([todo, ...todos]);
-  }
+  const deleteTodo = async id => {
+    const ok = await del(id);
 
-  const deleteTodo = index => {
-    // copiar los elementos del array todos
-    // desde el inicio hasta index (sin el elemento index)
-    // de index + 1, hasta el final.
-    // const head = todos.slice(0, index);
-    // const end = todos.slice(index + 1);
-    // setTodos([...head, ...end]);
+    if (!ok) return;
 
-    setTodos(
-      [
-      ...todos.slice(0, index),
-      ...todos.slice(index + 1)
-      ]
+    const index = todos.findIndex(element => element.id === id);
+      setTodos(
+        [
+        ...todos.slice(0, index),
+        ...todos.slice(index + 1)
+        ]
     );
   }
 
   return (
-    <div className="wrapper">
-      <div className="card frame">
+    <Grid container justifyContent="center">
+      <Grid item xs={12} md={6} lg={4}>
         <Context.Provider value={{
-          onClickCheckmark: changeDoneOnTodo,
-          onClickCross: deleteTodo,
+          handleToggleDone: updateTodo,
+          handleDeleteTodo: deleteTodo,
         }}>
-          <Header todos={todos} />
-          <TodoList todos={todos} />
-          <Form updateTodos={updateTodos}/>
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Header todos={todos} />
+                <TodoList todos={todos} />
+                <Form createTodo={createTodo} />
+                {error}
+              </>
+            } />
+            <Route path="/details/:id" element={<TodoDetails todos={todos} />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </Context.Provider>
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 }
+
 
 export default App;
