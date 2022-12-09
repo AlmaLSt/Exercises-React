@@ -14,6 +14,7 @@ function TodoList(props) {
             text={element.text}
             done={element.done}
             index={element.id}
+            details={element.details}
           />)
       }
       </List>
