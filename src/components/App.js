@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
 
 import Header from './Header';
 import Form from './Form';
@@ -72,8 +73,8 @@ function App() {
   }
 
   return (
-    <div className="wrapper">
-      <div className="card frame">
+    <Grid container justifyContent="center">
+      <Grid item xs={12} md={6} lg={4}>
         <Context.Provider value={{
           handleToggleDone: updateTodo,
           handleDeleteTodo: deleteTodo,
@@ -91,8 +92,8 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Context.Provider>
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 }
 

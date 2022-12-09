@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Todo from './Todo';
-import '../css/TodoList.css';
+import List from '@mui/material/List';
 
 function TodoList(props) {
   return (
-    <div data-testid="todo-list" className="list-wrapper">
+    <nav data-testid="todo-list" >
+      <List>
       {
         props.todos.map((element) =>
           <Todo
@@ -15,7 +16,8 @@ function TodoList(props) {
             index={element.id}
           />)
       }
-    </div>
+      </List>
+    </nav>
   )
 };
 

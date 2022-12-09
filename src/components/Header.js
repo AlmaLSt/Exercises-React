@@ -1,15 +1,15 @@
 import React from 'react';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-
-import '../css/header.css';
 
 function Header(props) {
   return (
-    <div className="card-header">
-      <h1 className="card-header-title header">
-        Hay {props.todos.length} tareas
-      </h1>
-    </div>
+   <Typography
+    variant="h5"
+    component="h1"
+   >
+    Hay {props.todos.length} tareas
+  </Typography>
   )
 };
 
