@@ -12,23 +12,27 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Context from './Context';
 
   function Todo(props) {
-    const { handleDeleteTodo } = React.useContext(Context);
+    const { handleToggleDone, handleDeleteTodo } = React.useContext(Context);
 
     return (
       <ListItem
         data-testid='todo'
         secondaryAction={
-          <IconButton edge="end" aria-label="comments">
+          <IconButton
+            edge="end"
+            aria-label="comments"
+            onClick={() => handleDeleteTodo(props.index)}
+          >
             <DeleteIcon />
           </IconButton>
         }
         disablePadding
         >
-        <ListItemButton>
+        <ListItemButton onClick={() => handleToggleDone(props.index, {done: !props.done})}>
           <ListItemIcon>
             <Checkbox
               edge="start"
-              checked={true}
+              checked={props.done}
               tabIndex={-1}
               disableRipple
             />
